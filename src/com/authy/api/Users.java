@@ -1,11 +1,5 @@
 package com.authy.api;
 
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -13,6 +7,10 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.stream.StreamSource;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.URLEncoder;
+import java.util.Map;
 
 /**
  * 
@@ -110,8 +108,7 @@ public class Users extends Resource {
 	}
 
 	private com.authy.api.User userFromXml(int status, String content) {
-		com.authy.api.User user = new com.authy.api.User();
-		
+        com.authy.api.User user;
 		try {
 			Error error = errorFromXml(status, content);
 			
@@ -121,12 +118,18 @@ public class Users extends Resource {
 				
 				StringReader xml = new StringReader(content);
 				Hash hash = (Hash)unmarshaller.unmarshal(new StreamSource(xml));
-				user = hash.getUser();
-			}
-			user.setError(error);
+                user = hash.getUser();
+                user.status = status;
+                user.content = content;
+
+            } else {
+                user = new com.authy.api.User();
+                user.setError(error);
+            }
+
 		}
 		catch(JAXBException e) {
-			e.printStackTrace();
+			throw new IllegalStateException("Error parsing user xml: "+e, e);
 		}
 		return user;
 	}
