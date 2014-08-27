@@ -22,7 +22,7 @@
     <profiles>
         <profile>
             <id>jdk</id>
-            <activation> <os><name>Mac</name></os> </activation>
+            <activation> <os><family>mac</family></os> </activation>
             <build>
                 <plugins>
                     <plugin>
