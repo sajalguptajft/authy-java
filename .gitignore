@@ -1,6 +1,7 @@
 *.class
 *~
 target
+dist
 
 # Package Files #
 .settings
